@@ -9,7 +9,7 @@
     "start": "concurrently npm:start:*"
   },
   "keywords": [],
-  "author": "",
+  "author": "Daniel Leitón",
   "license": "ISC",
   "dependencies": {
     "concurrently": "^7.6.0",

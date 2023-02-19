@@ -1,0 +1,16 @@
+{
+  "name": "stats",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "author": "Daniel Leitón",
+  "scripts": { 
+    "start:build": "tsc -w",
+    "start:run": "nodemon build/index.js",
+    "start": "concurrently npm:start:*"
+  },
+  "dependencies": {
+    "concurrently": "^7.6.0",
+    "nodemon": "^2.0.20"
+  }
+}
