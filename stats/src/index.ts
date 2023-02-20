@@ -79,19 +79,19 @@ let teamName = 'Tottenham';
 const winsAnalysis = new WinsAnalysis(teamName);
 const consoleReport =  new ConsoleReport();
 const summaryConsoleReport = new Summary(winsAnalysis, consoleReport);
-summaryConsoleReport.buildAnPrintReport(matches);
+summaryConsoleReport.buildAndPrintReport(matches);
 // html report
 const summaryHtmlReport = new Summary(winsAnalysis, new HtmlReport());
-summaryHtmlReport.buildAnPrintReport(matches);
+summaryHtmlReport.buildAndPrintReport(matches);
 // Will overwrite the report.html file
 let otherTeamName =  "Chelsea";
 const staticSummary = Summary.winsAnalysisPerTeamWithHtmlReport(otherTeamName);
-staticSummary.buildAnPrintReport(matches);
+staticSummary.buildAndPrintReport(matches);
 // referee whistles console report
 let refereeName = 'M Oliver';
 const refereeAnalysis = new RefereeAnalysis(refereeName);
 const summaryConsoleRefereeReport = new Summary(refereeAnalysis, consoleReport);
-summaryConsoleRefereeReport.buildAnPrintReport(matches);
+summaryConsoleRefereeReport.buildAndPrintReport(matches);
 
 
 

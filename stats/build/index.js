@@ -77,16 +77,16 @@ let teamName = 'Tottenham';
 const winsAnalysis = new WinsAnalysis_1.WinsAnalysis(teamName);
 const consoleReport = new ConsoleReport_1.ConsoleReport();
 const summaryConsoleReport = new Summary_1.Summary(winsAnalysis, consoleReport);
-summaryConsoleReport.buildAnPrintReport(matches);
+summaryConsoleReport.buildAndPrintReport(matches);
 // html report
 const summaryHtmlReport = new Summary_1.Summary(winsAnalysis, new HtmlReport_1.HtmlReport());
-summaryHtmlReport.buildAnPrintReport(matches);
+summaryHtmlReport.buildAndPrintReport(matches);
 // Will overwrite the report.html file
 let otherTeamName = "Chelsea";
 const staticSummary = Summary_1.Summary.winsAnalysisPerTeamWithHtmlReport(otherTeamName);
-staticSummary.buildAnPrintReport(matches);
+staticSummary.buildAndPrintReport(matches);
 // referee whistles console report
 let refereeName = 'M Oliver';
 const refereeAnalysis = new RefereeAnalysis_1.RefereeAnalysis(refereeName);
 const summaryConsoleRefereeReport = new Summary_1.Summary(refereeAnalysis, consoleReport);
-summaryConsoleRefereeReport.buildAnPrintReport(matches);
+summaryConsoleRefereeReport.buildAndPrintReport(matches);
