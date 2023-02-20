@@ -1,0 +1,5 @@
+#ignore all files in any directory named build
+build/
+
+#ignore all node_modules in any directory 
+node_modules/

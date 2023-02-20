@@ -1,3 +1,0 @@
-Date, Home Team, Away Team, Home Goals, Away Goals, Winner, Referee
-
-Add build and nodemodules folders to .gitignore
