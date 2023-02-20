@@ -1,5 +1,6 @@
 console.log('This is Typpie, the coolest web framework, based on Extraction Approach!')
 
+import axios from 'axios';
 import { User } from "./models/User";
 
 const user = new User({ name: 'Fulanito', age: 35});
@@ -29,3 +30,33 @@ user.trigger('change');
 console.log(user);
 
 user.trigger('otherEvent');
+
+// Install > npm install -g json-server
+// Create and fill file: db.json
+// > json-server -w db.json
+// > npm install axios
+
+axios.post('http://localhost:3000/users', {
+  name: 'Nolito',
+  age: 50
+});
+
+const jsonUser = new User({ id: 19 });
+
+jsonUser.fetch();
+
+setTimeout(() => {
+  console.log(jsonUser);
+}, 1000);
+
+/*let marito = {};
+axios.get('http://localhost:3000/users/1').then(user => marito=user);
+console.log(marito);*/
+
+const oldUser = new User({ id: 1 });
+oldUser.set({ name: 'Otro won', age: 40 })
+oldUser.save();
+
+const newUser = new User({});
+newUser.set({ name: 'New won', age: 44 })
+newUser.save();
