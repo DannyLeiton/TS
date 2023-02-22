@@ -117,7 +117,36 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
+})({"src/models/Eventing.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Eventing = void 0;
+var Eventing = /** @class */function () {
+  function Eventing() {
+    this.events = {}; // 'click', 'hover', 'mouseover'...
+  }
+
+  Eventing.prototype.on = function (eventName, callback) {
+    var handlers = this.events[eventName] || [];
+    handlers.push(callback);
+    this.events[eventName] = handlers;
+  };
+  Eventing.prototype.trigger = function (eventName) {
+    var handlers = this.events[eventName];
+    if (!handlers || handlers.length === 0) {
+      return;
+    }
+    handlers.forEach(function (callback) {
+      callback();
+    });
+  };
+  return Eventing;
+}();
+exports.Eventing = Eventing;
+},{}],"node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -4510,134 +4539,182 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults/index.js","./cancel/CanceledError":"node_modules/axios/lib/cancel/CanceledError.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./env/data":"node_modules/axios/lib/env/data.js","./helpers/toFormData":"node_modules/axios/lib/helpers/toFormData.js","../lib/core/AxiosError":"node_modules/axios/lib/core/AxiosError.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"node_modules/axios/lib/helpers/isAxiosError.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/User.ts":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/Synch.ts":[function(require,module,exports) {
 "use strict";
 
+// three options to solve sync dependencies on user:
+// 1. Sync gets functions arguments -> Would still use UserProps
+// 2. Sync expects arguments that satisfy interfaces 'Serialize' (to save) and 'Deserialize' (to fetch) -> Does not describe all the info of the object.
+// 3. Sync is a generic class to customize the type of data to save -> More complex, but reusable for all entities.
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
   };
 };
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Sync = void 0;
+var axios_1 = __importDefault(require("axios"));
+var Sync = /** @class */function () {
+  function Sync(rootUrl) {
+    this.rootUrl = rootUrl;
+  }
+  Sync.prototype.fetch = function (id) {
+    return axios_1.default.get("".concat(this.rootUrl, "/").concat(id));
+  };
+  Sync.prototype.save = function (data) {
+    var id = data.id;
+    if (id) {
+      return axios_1.default.put("".concat(this.rootUrl, "/").concat(id), data);
+    } else {
+      return axios_1.default.post(this.rootUrl, data);
+    }
+  };
+  return Sync;
+}();
+exports.Sync = Sync;
+},{"axios":"node_modules/axios/index.js"}],"src/models/Attributes.ts":[function(require,module,exports) {
+"use strict";
+
+// Important rules to consider:
+// 1. In TS, strings can be types.
+// 2. In JS (=> TS), all object keys are strings.
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Attributes = void 0;
+var Attributes = /** @class */function () {
+  function Attributes(data) {
+    this.data = data;
+  }
+  Attributes.prototype.get = function (key) {
+    return this.data[key];
+  };
+  Attributes.prototype.set = function (update) {
+    Object.assign(this.data, update);
+  };
+  return Attributes;
+}();
+exports.Attributes = Attributes;
+},{}],"src/models/User.ts":[function(require,module,exports) {
+"use strict";
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.User = void 0;
-// try to change it to just "Object", if that makes sense.
-// Let's describe the Object Literal using and Interface
-var axios_1 = __importDefault(require("axios"));
+var Eventing_1 = require("./Eventing");
+var Synch_1 = require("./Synch");
+var Attributes_1 = require("./Attributes");
+var rootUrl = 'http://localhost:3000/users';
+// To re-integrate events:
+// Option 1: Accept dependencies as second constructor argument.
+// Option 2: Only accept dependencies into constructor. Define a
+//  static class method to preconfigure User properties afterwards.
+// Option 3: Only accept properties into constructor. Hard code
+//  dependencies as class properties.
 var User = /** @class */function () {
-  function User(data) {
-    this.data = data;
-    this.events = {}; // 'click', 'hover', 'mouseover'...
+  function User(attrs) {
+    this.events = new Eventing_1.Eventing(); // This will work best #3.
+    this.sync = new Synch_1.Sync(rootUrl);
+    this.attributes = new Attributes_1.Attributes(attrs);
   }
-
-  User.prototype.get = function (propName) {
-    return this.data[propName];
-  };
-  User.prototype.set = function (update) {
-    Object.assign(this.data, update);
-  };
-  User.prototype.on = function (eventName, callback) {
-    var handlers = this.events[eventName] || [];
-    handlers.push(callback);
-    this.events[eventName] = handlers;
-  };
-  User.prototype.trigger = function (eventName) {
-    var handlers = this.events[eventName];
-    if (!handlers || handlers.length === 0) {
-      return;
-    }
-    handlers.forEach(function (callback) {
-      callback();
-    });
-  };
-  User.prototype.fetch = function () {
-    var _this = this;
-    axios_1.default.get("http://localhost:3000/users/".concat(this.get('id'))).then(function (response) {
-      _this.set(response.data);
-    });
-  };
-  User.prototype.save = function () {
-    var id = this.get('id');
-    if (id) {
-      axios_1.default.put("http://localhost:3000/users/".concat(id), this.data);
-    } else {
-      axios_1.default.post('http://localhost:3000/users', this.data);
-    }
-  };
   return User;
 }();
 exports.User = User;
-},{"axios":"node_modules/axios/index.js"}],"src/index.ts":[function(require,module,exports) {
+},{"./Eventing":"src/models/Eventing.ts","./Synch":"src/models/Synch.ts","./Attributes":"src/models/Attributes.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-console.log('This is Typpie, the coolest web framework, based on Extraction Approach!');
-var axios_1 = __importDefault(require("axios"));
+console.log('This is Typpie, a Typed Web Framework!');
+//import axios from 'axios';
 var User_1 = require("./models/User");
-var user = new User_1.User({
-  name: 'Fulanito',
-  age: 35
-});
-console.info("User Props: ".concat(user.get('name'), ", ").concat(user.get('age')));
-user.set({
-  name: "Fulanito D'tal"
-});
-console.info("New User Props: ".concat(user.get('name'), ", ").concat(user.get('age')));
-var userEmpty = new User_1.User({});
-console.info("New Empty User Props: ".concat(userEmpty.get('name'), ", ").concat(userEmpty.get('age')));
-user.on('change', function () {
+/* First approach:
+const user = new User({ name: 'Fulanito', age: 35});
+
+console.info(`User Props: ${user.get('name')}, ${user.get('age')}`);
+
+user.set({ name: "Fulanito D'tal" })
+
+console.info(`New User Props: ${user.get('name')}, ${user.get('age')}`);
+
+const userEmpty = new User({});
+
+console.info(`New Empty User Props: ${userEmpty.get('name')}, ${userEmpty.get('age')}`);
+*/
+/*
+-----------------------------------------------------------------
+Doesn't work this way after separating the events to a diff class.
+Now requires user.events.on / .trigger check line: 70.
+-----------------------------------------------------------------
+user.on('change', () => {
   console.log('change 0');
 });
-user.on('change', function () {
+user.on('change', () => {
   console.log('change 1');
 });
-user.on('otherEvent', function () {
+user.on('otherEvent', () => {
   console.log('otherEvent 0');
 });
+
 user.trigger('change');
+
 console.log(user);
+
 user.trigger('otherEvent');
+*/
 // Install > npm install -g json-server
 // Create and fill file: db.json
 // > json-server -w db.json
 // > npm install axios
-axios_1.default.post('http://localhost:3000/users', {
+/* Examples after installing json-server.
+axios.post('http://localhost:3000/users', {
   name: 'Nolito',
   age: 50
 });
-var jsonUser = new User_1.User({
-  id: 19
-});
+
+const jsonUser = new User({ id: 19 });
+ 
 jsonUser.fetch();
-setTimeout(function () {
+
+setTimeout(() => {
   console.log(jsonUser);
 }, 1000);
+*/
 /*let marito = {};
 axios.get('http://localhost:3000/users/1').then(user => marito=user);
 console.log(marito);*/
-var oldUser = new User_1.User({
-  id: 1
-});
-oldUser.set({
-  name: 'Otro won',
-  age: 40
-});
+/* Before Async and Attributes refactoring:
+const oldUser = new User({ id: 1 });
+oldUser.set({ name: 'Otro won', age: 40 })
 oldUser.save();
-var newUser = new User_1.User({});
-newUser.set({
-  name: 'New won',
-  age: 44
-});
+
+const newUser = new User({});
+newUser.set({ name: 'New won', age: 44 })
 newUser.save();
-},{"axios":"node_modules/axios/index.js","./models/User":"src/models/User.ts"}],"../../../../../.nvm/versions/node/v8.3.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+newUser.events.on('change', () => {
+  console.log('change 0');
+});
+
+newUser.events.on('change', () => {
+  console.log('change 1');
+});
+
+newUser.events.trigger('change');
+*/
+var user = new User_1.User({
+  name: 'Perensejo',
+  age: 0
+});
+user.sync.save({
+  name: user.attributes.get('name'),
+  age: user.attributes.get('age')
+});
+},{"./models/User":"src/models/User.ts"}],"../../../../../.nvm/versions/node/v8.3.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -4662,7 +4739,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62047" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54745" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

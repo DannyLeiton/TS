@@ -1,60 +1,29 @@
-// try to change it to just "Object", if that makes sense.
-// Let's describe the Object Literal using and Interface
-import axios, { AxiosResponse } from 'axios';
 
-interface UserProps {
+import { Eventing } from './Eventing';
+import { Sync } from './Synch';
+import { Attributes } from './Attributes';
+
+// Let's describe the Object Literal using and Interface
+export interface UserProps {
   id?: number;
   name?: string;  // Question mark indicates the prop as optional.
   age?: number; 
 }
 
-type Callback = () => void
+const rootUrl = 'http://localhost:3000/users';
 
+// To re-integrate events:
+// Option 1: Accept dependencies as second constructor argument.
+// Option 2: Only accept dependencies into constructor. Define a
+//  static class method to preconfigure User properties afterwards.
+// Option 3: Only accept properties into constructor. Hard code
+//  dependencies as class properties.
 export class User {
-  events: { [key: string]: Callback[] } = {}; // 'click', 'hover', 'mouseover'...
+  public events: Eventing = new Eventing(); // This will work best #3.
+  public sync: Sync<UserProps> = new Sync<UserProps>(rootUrl);
+  public attributes: Attributes<UserProps>;
 
-  constructor(private data: UserProps) {}
-
-  get(propName: string): number | string {
-    return this.data[propName];
+  constructor(attrs: UserProps) {
+    this.attributes = new Attributes<UserProps>(attrs);
   }
-
-  set(update: UserProps): void {
-    Object.assign(this.data, update);
-  }
-
-  on(eventName: string, callback: Callback): void { // also works callback: () => {}
-    const handlers =  this.events[eventName] || [];
-    handlers.push(callback);
-    this.events[eventName] = handlers;
-  }
-
-  trigger(eventName: string): void {
-    const handlers =  this.events[eventName];
-    if (!handlers || handlers.length === 0){
-      return;
-    }
-
-    handlers.forEach(callback => {
-      callback();
-    });
-  }
-
-  fetch(): void {
-    axios.get(`http://localhost:3000/users/${this.get('id')}`)
-      .then((response: AxiosResponse): void => {
-        this.set(response.data);
-      });
-  }
-
-  save(): void {
-    const id = this.get('id');
-
-    if (id) {
-      axios.put(`http://localhost:3000/users/${id}`, this.data);
-    } else {
-      axios.post('http://localhost:3000/users', this.data)
-    }
-  }
-
 }
