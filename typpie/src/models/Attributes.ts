@@ -5,11 +5,15 @@
 export class Attributes<T extends Object> {
   constructor(private data: T) {}
 
-  get<K extends keyof T>(key: K): T[K] { // Advanced Generic constraint
+  get = <K extends keyof T>(key: K): T[K] => { // Advanced Generic constraint
     return this.data[key];
   }
 
   set(update: T): void {
     Object.assign(this.data, update);
+  }
+
+  getAll(): T {
+    return this.data;
   }
 }

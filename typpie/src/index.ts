@@ -81,9 +81,32 @@ newUser.events.on('change', () => {
 newUser.events.trigger('change');
 */
 
+/* FW v2
+
 const user = new User ({ name: 'Perensejo', age: 0 })
 
+Waay 2 complex:
 user.sync.save({ name: user.attributes.get('name'), age: user.attributes.get('age')});
+*/
+/*
+const user = new User ({ age: 40 })
+
+user.on('change', () => {
+  console.log(user)
+});
+
+user.set({ name: 'Lemita' });*/
+/*
+const user = new User ({ id: 1, name: 'New Name', age: 5 })
+
+user.on('save', () => {
+  console.log(user)
+});
+
+user.save();*/
+
+
+
 
 
 
