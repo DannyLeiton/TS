@@ -1,7 +1,8 @@
 console.log('This is Typpie, a Typed Web Framework!')
 
-//import axios from 'axios';
-import { User } from "./models/User";
+// import axios, { AxiosResponse } from 'axios';
+//import { Collection } from "./models/Collection"
+import { User/*, UserProps*/ } from "./models/User" 
 
 /* First approach:
 const user = new User({ name: 'Fulanito', age: 35});
@@ -104,7 +105,7 @@ user.on('save', () => {
 });
 
 user.save();*/
-
+/*
 const user = User.buildUser({ id: 3 });
 
 user.on('change', () => {
@@ -112,8 +113,22 @@ user.on('change', () => {
 });
 
 user.fetch();
+*/
 
+const url = 'http://localhost:3000/users'
 
+/*const collection = new Collection<User, UserProps>(
+  url,
+  (json: UserProps) => User.(json)
+);*/
+
+const collection = User.buildUserCollection();
+
+collection.on('change', () => {
+  console.log(collection);
+});
+
+collection.fetch();
 
 
 
