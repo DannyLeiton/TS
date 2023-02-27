@@ -2,7 +2,7 @@ console.log('This is Typpie, a Typed Web Framework!')
 
 // import axios, { AxiosResponse } from 'axios';
 //import { Collection } from "./models/Collection"
-import { User/*, UserProps*/ } from "./models/User" 
+//import { User/*, UserProps*/ } from "./models/User" 
 
 /* First approach:
 const user = new User({ name: 'Fulanito', age: 35});
@@ -114,14 +114,14 @@ user.on('change', () => {
 
 user.fetch();
 */
-
+/*
 const url = 'http://localhost:3000/users'
 
-/*const collection = new Collection<User, UserProps>(
+const collection = new Collection<User, UserProps>(
   url,
   (json: UserProps) => User.(json)
 );*/
-
+/*
 const collection = User.buildUserCollection();
 
 collection.on('change', () => {
@@ -129,6 +129,14 @@ collection.on('change', () => {
 });
 
 collection.fetch();
+*/
+
+import { UserForm } from "./views/UserForm"
+
+const userForm =  new UserForm(document.getElementById('root'))
+
+userForm.render()
+
 
 
 
