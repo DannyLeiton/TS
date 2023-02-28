@@ -131,11 +131,20 @@ collection.on('change', () => {
 collection.fetch();
 */
 
-import { UserForm } from "./views/UserForm"
+import { UserForm } from './views/UserForm'
+import { User } from './models/User'
 
-const userForm =  new UserForm(document.getElementById('root'))
+const user = User.buildUser({ name: 'Namen', age: 30 })
 
-userForm.render()
+const root = document.getElementById('root')
+
+// Use type guard to avoid TS strict mode errors.
+if (root) {
+  const userForm =  new UserForm(root, user)
+  userForm.render()
+} else {
+  throw new Error('Root element 404')
+}
 
 
 
