@@ -130,22 +130,43 @@ collection.on('change', () => {
 
 collection.fetch();
 */
-
-import { UserForm } from './views/UserForm'
+/*
+import { UserEdit } from './views/UserEdit'
 import { User } from './models/User'
 
-const user = User.buildUser({ name: 'Namen', age: 30 })
+const user = User.buildUser({ name: 'Fulanito', age: 30 })
 
 const root = document.getElementById('root')
 
 // Use type guard to avoid TS strict mode errors.
 if (root) {
-  const userForm =  new UserForm(root, user)
-  userForm.render()
+  const userEdit =  new UserEdit(root, user)
+  userEdit.render()
+  console.log(userEdit)
 } else {
   throw new Error('Root element 404')
 }
+*/
 
+import { UserList } from "./views/UserList"
+import { Collection } from "./models/Collection"
+import { User, UserProps } from "./models/User"
 
+const users = new Collection('http://localhost:3000/users',
+  (json: UserProps) => {
+    return User.buildUser(json)
+  }
+)
 
+users.on('change', () => {
+  const root = document.getElementById('root')
+
+  if (root) {
+    new UserList(root, users).render()
+  } else {
+    throw new Error('Root element 404')
+  }
+})
+
+users.fetch()
 

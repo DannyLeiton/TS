@@ -5,3 +5,12 @@ Let's create UserEdit with UserShow and UserForm
 -> We need to have a good way to handle user events (clicking, typing, etc).
 -> There will probably be a tight coupling between a view and a model.
 -> We need to be able to reach into the HTML produced by a view and get a specific element.
+
+1. Call 'render' method.
+2. Render calls 'template', gets HTML string.
+3. Render inserts HTML string into a template element.
+4. Bind event handlers to the HTML in the template element.
+5. Call 'sectionMap' for list of sections that need to be created.
+6. Render method populates values in 'sections'.
+7. We somehow insert new 'child' views in those 'sections'.
+8. Render inserts content of template int DOM.
