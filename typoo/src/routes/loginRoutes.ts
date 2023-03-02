@@ -1,5 +1,11 @@
 import { Router, Request, Response } from 'express'
 
+// We'd rather create our own custom interface to define exactly what a request is.
+// Not a perfect solution, but helps dealing with poor type defs.
+interface RequestWithBody extends Request {
+  body: { [key: string]: string | undefined }
+}
+
 const router = Router()
 
 router.get('/login', (req: Request, res: Response) => {
@@ -18,7 +24,7 @@ router.get('/login', (req: Request, res: Response) => {
   `)
 })
 
-router.post('/login', (req: Request, res: Response) => {
+router.post('/login', (req: RequestWithBody, res: Response) => {
   const { email, password } = req.body
   if (email && password){
     res.send(`${email.toUpperCase()} ${password.toUpperCase()}`)
