@@ -20,7 +20,11 @@ router.get('/login', (req: Request, res: Response) => {
 
 router.post('/login', (req: Request, res: Response) => {
   const { email, password } = req.body
-  res.send(email + password) // at this point, if the inputs are not properly named, email and password would be undefined.
+  if (email && password){
+    res.send(`${email.toUpperCase()} ${password.toUpperCase()}`)
+  } else {
+    res.send('email and password should be provided')
+  }
 })
 
 export { router }
