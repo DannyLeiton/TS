@@ -1,0 +1,19 @@
+Express + Typescript Integration:
+
+-> TS has a very distinct OOP Style.
+-> Many popular JS libs were written before JS had any solid idea of 'classes'.
+-> Integrating TS with popular JS libs can be tough.
+
+TS with JS Libs, 3 options:
+  1. Use the lib normally, adding in basic type annotations where possible.
+  2. Use a TS adapter library that has helpers for using your lib with TS. (e.g. "ts-express-decorators").
+  3. Twist your lib to work with TS classes. (Will do this: first option 1 using Express and refactor it to option 3 using all TS complexity).
+
+Express is a middleware which does some processing of 'Request' and 'Response', then calls 'NextFunction' when complete.
+Middleware is hard to deal with out of the box with TS.
+
+Integration Issues:
+  -> CONS: 1. Type definition files alone can't express what is going on in the JS world accurately (example: middleware, and the body property).
+           2. Type definition files provided to us aren't always accurate. This is how TS is handled, sometimes this files are not enough. 
+           3. Inputs to a server (or any program with external inputs) are not guaranteed to exist, or be of the correct type. (Exacerbarted by the type definition file)
+  -> PROS: 1. Addressing these type issues with Typescript can force us to write better code.
