@@ -22,3 +22,19 @@ At the end classes in TS are just inheritance prototypes in JS.
 
 Decorators: Functions that can be used to modify/change/anything different properties/methods in the class. These are not the same as JS decorators.
             Used only inside or on classes. Experimental atm.
+
+Solution to simplify decorators on middleware using metadata.
+-> Node executes our code.
+-> Class definition read in - decorators
+-> Decorators associate route configuration info with the method by using metadata.
+-> All method decorators run.
+-> Class decorator of '@controller' runs last.
+-> Class decorator reads metadata from each method, adds complete route definitions to router.
+
+Metadata: -> Proposed feature to be added to JS (and thus, TS).
+          -> Snippets of info that can be tied to a method, property, or class definition.
+          -> Can be used for super custom stuff.
+          -> TS will (optionally) provide type info as metadata.
+          -> Read and written using th reflect-metadata package. (npm).
+          
+
