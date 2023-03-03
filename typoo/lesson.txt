@@ -17,3 +17,8 @@ Integration Issues:
            2. Type definition files provided to us aren't always accurate. This is how TS is handled, sometimes this files are not enough. 
            3. Inputs to a server (or any program with external inputs) are not guaranteed to exist, or be of the correct type. (Exacerbarted by the type definition file)
   -> PROS: 1. Addressing these type issues with Typescript can force us to write better code.
+
+At the end classes in TS are just inheritance prototypes in JS.
+
+Decorators: Functions that can be used to modify/change/anything different properties/methods in the class. These are not the same as JS decorators.
+            Used only inside or on classes. Experimental atm.
