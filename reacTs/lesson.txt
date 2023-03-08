@@ -1,0 +1,16 @@
+Using TS with React and Redux.
+-> Pros: 1. Far easier to avoid extremely common typos, like incorrect action types.
+         2. Gives devs a far better understanding of the type of data flowing around.
+         3. Much easier to refactor just about anything.
+
+It's great to use it, but be aware of:
+-> Cons: 1. Not the best type definition files (especially around Redux).
+         2. Tons of generics flying around.
+         3. Many imports, as just about everything (action creator, action, reducer, store, component) need to be aware of diff types.
+         4. Redux inherently functional in nature, tough integration with TS classes.
+
+Check: redux.js.org/recipes/usage-with-typescript (Not very good recommendations)
+
+App to develop: a Todo List.
+Command: > npx create-react-app rrts --template typescript 
+
