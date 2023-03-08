@@ -11,6 +11,6 @@ It's great to use it, but be aware of:
 
 Check: redux.js.org/recipes/usage-with-typescript (Not very good recommendations)
 
-App to develop: a Todo List.
-Command: > npx create-react-app rrts --template typescript 
+App to develop: Fetch a Todo List.
+Command: > npx create-react-app reacTs --template typescript 
 
