@@ -13,4 +13,4 @@ Check: redux.js.org/recipes/usage-with-typescript (Not very good recommendations
 
 App to develop: Fetch a Todo List.
 Command: > npx create-react-app reacTs --template typescript 
-
+https://jsonplaceholder.typicode.com/todos
